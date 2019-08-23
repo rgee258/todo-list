@@ -16,8 +16,6 @@ const manager = (() => {
   }
 
   function addProject(projectName) {
-    // Find submission box and retrieve text for projectName
-    // OR just do that via displayHandler and add an argument here?
     projectList.push(ProjectFactory(projectName));
   }
 
