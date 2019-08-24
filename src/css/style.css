@@ -91,6 +91,7 @@ h3 {
 }
 
 .btn {
+  display: inline-block;
   width: 15%;
   margin: auto;
   padding: 2% 0;
@@ -131,6 +132,12 @@ h3 {
 .project span:hover {
   color: green;
   cursor: pointer;
+}
+
+/* Active Project */
+
+.project-active {
+  background-color: palegreen;
 }
 
 /* Todos Col */

@@ -19,11 +19,16 @@ const manager = (() => {
     projectList.push(ProjectFactory(projectName));
   }
 
+  function createTodo(title, description, dueDate, priority, notes) {
+    let todo = TodoFactory(title, description, dueDate, priority, notes);
+    active.addTodo(todo);
+  }
+
   const getProjects = () => projectList;
 
   const getActiveTodos = () => active.getTodoList();
 
-  return { getActive, setActive, addProject, getProjects, 
+  return { getActive, setActive, addProject, createTodo, getProjects, 
     getActiveTodos };
 
 })();

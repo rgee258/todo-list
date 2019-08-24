@@ -21,12 +21,11 @@ const displayHandler = (() => {
   }
 
   function createProjectForm() {
-
     // Form label and input
     let form = document.createElement("form");
     form.id = "new-project-form";
     let projectLabel = document.createElement("p");
-    projectLabel.classList.add("detail-label");
+    projectLabel.classList.add("project-form-label");
     projectLabel.innerText = "Project Name";
     let projectName = document.createElement("input");
     projectName.id = "new-project-name";
@@ -38,7 +37,6 @@ const displayHandler = (() => {
     btn.type = "button";
     btn.addEventListener("click", function() {
       newProject();
-      let projectName = document.querySelector("#new-project-name");
     });
     btn.classList.add("btn");
     // Appending to form
@@ -76,11 +74,157 @@ const displayHandler = (() => {
       projectTitle.innerText = project.name;
       projectTitle.addEventListener("click", function() {
         manager.setActive(index);
+        document.querySelector(".project-active").classList.remove("project-active");
+        projectNode.classList.add("project-active");
         listTodos();
       });
       projectNode.appendChild(projectTitle);
       projectListNode.appendChild(projectNode);
     });
+  }
+
+  // Todos Handling
+
+  function newTodoBtn() {
+    let todosHeader = document.querySelector(".todos-header");
+    let btn = document.createElement("button");
+    btn.innerText = "New";
+    btn.classList.add("btn");
+    btn.classList.add("todo-btn");
+    btn.addEventListener("click", function() {
+      // Add or remove new project form if it exists
+      if (document.querySelector("#new-todo-form")) {
+        document.querySelector("#new-todo-form").remove();
+      }
+      else {
+        todosHeader.appendChild(createTodoForm());
+      }
+    });
+    todosHeader.appendChild(btn);
+  }
+
+  function createTodoForm() {
+    // Form label and input
+    let form = document.createElement("form");
+    form.id = "new-todo-form";
+    let todoTitleLabel = document.createElement("p");
+    todoTitleLabel.classList.add("todo-form-label");
+    todoTitleLabel.innerText = "Title";
+    let todoTitle = document.createElement("input");
+    todoTitle.id = "new-todo-title";
+    todoTitle.type = "text";
+    let todoDescriptionLabel = document.createElement("p");
+    todoDescriptionLabel.classList.add("todo-form-label");
+    todoDescriptionLabel.innerText = "Description";
+    let todoDescription = document.createElement("input");
+    todoDescription.id = "new-todo-description";
+    todoDescription.type = "text";
+    let todoDateLabel = document.createElement("p");
+    todoDateLabel.classList.add("todo-form-label");
+    todoDateLabel.innerText = "Due Date";
+    let todoDate = document.createElement("input");
+    todoDate.id = "new-todo-date";
+    todoDate.type = "text";
+    let todoPriorityLabel = document.createElement("p");
+    todoPriorityLabel.classList.add("todo-form-label");
+    todoPriorityLabel.innerText = "Priority";
+    let todoPriorityHigh = document.createElement("input");
+    todoPriorityHigh.classList.add("new-todo-priority");
+    todoPriorityHigh.id = "new-todo-priority-high";
+    todoPriorityHigh.type = "radio";
+    todoPriorityHigh.name = "newPriority";
+    todoPriorityHigh.value = "High";
+    todoPriorityHigh.checked = true;
+    let todoPriorityHighText = document.createElement("span");
+    todoPriorityHighText.classList.add("new-todo-priority-text");
+    todoPriorityHighText.innerText = "High";
+    let todoPriorityMedium = document.createElement("input");
+    todoPriorityMedium.classList.add("new-todo-priority");
+    todoPriorityMedium.id = "new-todo-priority-medium";
+    todoPriorityMedium.type = "radio";
+    todoPriorityMedium.name = "newPriority";
+    todoPriorityMedium.value = "Medium";
+    let todoPriorityMediumText = document.createElement("span");
+    todoPriorityMediumText.classList.add("new-todo-priority-text");
+    todoPriorityMediumText.innerText = "Medium";
+    let todoPriorityLow = document.createElement("input");
+    todoPriorityLow.classList.add("new-todo-priority");
+    todoPriorityLow.id = "new-todo-priority-low";
+    todoPriorityLow.type = "radio";
+    todoPriorityLow.name = "newPriority";
+    todoPriorityLow.value = "Low";
+    let todoPriorityLowText = document.createElement("span");
+    todoPriorityLowText.classList.add("new-todo-priority-text");
+    todoPriorityLowText.innerText = "Low";
+    let todoNotesLabel = document.createElement("p");
+    todoNotesLabel.classList.add("todo-form-label");
+    todoNotesLabel.innerText = "Notes (Optional)";
+    let todoNotes = document.createElement("input");
+    todoNotes.id = "new-todo-notes";
+    todoNotes.type = "text";
+    // Form submit
+    let btn = document.createElement("button");
+    btn.innerText = "Create";
+    // Need to specify button type as button because submit is default
+    btn.type = "button";
+    btn.addEventListener("click", function() {
+      newTodo();
+    });
+    btn.classList.add("btn");
+    // Appending to form
+    form.appendChild(todoTitleLabel);
+    form.appendChild(todoTitle);
+    form.appendChild(todoDescriptionLabel);
+    form.appendChild(todoDescription);
+    form.appendChild(todoDateLabel);
+    form.appendChild(todoDate);
+    form.appendChild(todoPriorityLabel);
+    form.appendChild(todoPriorityHigh);
+    form.appendChild(todoPriorityHighText);
+    form.appendChild(todoPriorityMedium);
+    form.appendChild(todoPriorityMediumText);
+    form.appendChild(todoPriorityLow);
+    form.appendChild(todoPriorityLowText);
+    form.appendChild(todoNotesLabel);
+    form.appendChild(todoNotes);
+    form.appendChild(btn);
+
+    return form;
+  }
+
+  function newTodo() {
+    let filled = true;
+    let todoInputs = [];
+    // Index 0 is title
+    todoInputs.push(document.querySelector("#new-todo-title").value);
+    // Index 1 is description
+    todoInputs.push(document.querySelector("#new-todo-description").value);
+    // Index 2 is dueDate
+    todoInputs.push(document.querySelector("#new-todo-date").value);
+    // Index 3 is priority
+    todoInputs.push(document.querySelector('input[name="newPriority"]:checked').value);
+    // Index 4 is notes
+    todoInputs.push(document.querySelector("#new-todo-notes").value);
+
+    for (let i = 0; i < 3; i++) {
+      if (isEmpty(todoInputs[i])) {
+        window.alert("Missing at least one todo field!");
+        filled = false;
+        break;
+      }
+    };
+
+    // Add default value to notes if none are present
+    if (isEmpty(todoInputs[4])) {
+      todoInputs[4] = "None";
+    }
+
+    if (filled) {
+      manager.createTodo(todoInputs[0], todoInputs[1], todoInputs[2], 
+        todoInputs[3], todoInputs[4]);
+      document.querySelector("#new-todo-form").remove();
+      listTodos();
+    }
   }
 
   function listTodos() {
@@ -189,7 +333,11 @@ const displayHandler = (() => {
 
   function setup() {
     newProjectBtn();
+    newTodoBtn();
+    manager.setActive(0);
     listProjects();
+    // Find first project, which is always default, and set active
+    document.querySelector(".project").classList.add("project-active");
   }
 
   // Check if string is empty
