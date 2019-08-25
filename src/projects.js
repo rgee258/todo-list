@@ -23,9 +23,13 @@ const ProjectFactory = (name) => {
     }
   }
 
+  function updateTodoPriority(newPriority, index) {
+    todoList[index].setPriority(newPriority);
+  }
+
   const getTodoList = () => todoList;
 
-  return { name, setName, getTodoList, addTodo, deleteTodo }
+  return { name, setName, getTodoList, addTodo, deleteTodo, updateTodoPriority }
 }
 
 export {
