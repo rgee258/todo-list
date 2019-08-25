@@ -11,8 +11,16 @@ const manager = (() => {
     return active;
   }
 
-  function setActive(projectNum) {
-    active = projectList[projectNum];
+  function getActiveIndex() {
+    for (let i = 0; i < projectList.length; i++) {
+      if (active == projectList[i]) {
+        return i;
+      }
+    }
+  }
+
+  function setActive(projectIndex) {
+    active = projectList[projectIndex];
   }
 
   function addProject(projectName) {
@@ -24,12 +32,21 @@ const manager = (() => {
     active.addTodo(todo);
   }
 
+  function removeTodo(index) {
+    active.deleteTodo(index);
+  }
+
+  function changeTodoPriority(newPriority, index) {
+    // What parameters do we need?
+    active.updateTodoPriority(newPriority, index);
+  }
+
   const getProjects = () => projectList;
 
   const getActiveTodos = () => active.getTodoList();
 
-  return { getActive, setActive, addProject, createTodo, getProjects, 
-    getActiveTodos };
+  return { getActive, getActiveIndex, setActive, addProject, createTodo, removeTodo,
+    changeTodoPriority, getProjects, getActiveTodos };
 
 })();
 

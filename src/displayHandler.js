@@ -62,9 +62,7 @@ const displayHandler = (() => {
   function listProjects() {
     let projectListNode = document.querySelector(".projects-list");
     // Clear already shown projects
-    while (projectListNode.firstChild) {
-      projectListNode.removeChild(projectListNode.firstChild);
-    }
+    clearProjects();
     // Gather and add every project
     let projectList = manager.getProjects();
     projectList.forEach(function(project, index) {
@@ -74,13 +72,36 @@ const displayHandler = (() => {
       projectTitle.innerText = project.name;
       projectTitle.addEventListener("click", function() {
         manager.setActive(index);
-        document.querySelector(".project-active").classList.remove("project-active");
+        removeActiveProject();
         projectNode.classList.add("project-active");
         listTodos();
       });
       projectNode.appendChild(projectTitle);
       projectListNode.appendChild(projectNode);
     });
+    // Show the active project
+    showActiveProject();
+    // Show the todos for the currently active project
+    listTodos();
+  }
+
+  function clearProjects() {
+    let projectListNode = document.querySelector(".projects-list");
+    while (projectListNode.firstChild) {
+      projectListNode.removeChild(projectListNode.firstChild);
+    }
+  }
+
+  function showActiveProject() {
+    let allProjects = document.querySelectorAll(".project");
+    let activeIndex = manager.getActiveIndex();
+    allProjects[activeIndex].classList.add("project-active");
+  }
+
+  function removeActiveProject() {
+    if (document.querySelector(".project-active")) {
+      document.querySelector(".project-active").classList.remove("project-active");
+    }
   }
 
   // Todos Handling
@@ -230,9 +251,7 @@ const displayHandler = (() => {
   function listTodos() {
     let todoListNode = document.querySelector(".todos-list");
     // Clear already shown todos
-    while (todoListNode.firstChild) {
-      todoListNode.removeChild(todoListNode.firstChild);
-    }
+    clearTodos()
     // Gather and add every todo
     let todoList = manager.getActiveTodos();
     todoList.forEach(function(todo, index) {
@@ -266,14 +285,21 @@ const displayHandler = (() => {
       todoTop.appendChild(createDeleteTodoBtn(index));
       // Add event listener to display the todo details
       todoTop.addEventListener("click", function() {
-        todoDetails(todoNode, todo);
+        todoDetails(todoNode, todo, index);
       });
       todoNode.appendChild(todoTop);
       todoListNode.appendChild(todoNode);
     });
   }
 
-  function todoDetails(node, todo) {
+  function clearTodos() {
+    let todoListNode = document.querySelector(".todos-list");
+    while (todoListNode.firstChild) {
+      todoListNode.removeChild(todoListNode.firstChild);
+    }
+  }
+
+  function todoDetails(node, todo, todoIndex) {
     // Remove any already opened details
     let openDetails = document.querySelectorAll(".details");
     openDetails.forEach(function(opened) {
@@ -306,6 +332,7 @@ const displayHandler = (() => {
     details.appendChild(notes);
 
     // Placeholder for changing priority pseudo-form
+    details.appendChild(createPriorityChangeForm());
 
     // Appending
     node.appendChild(details);
@@ -325,9 +352,88 @@ const displayHandler = (() => {
     return btn;
   }
 
+  function createPriorityChangeForm(todoIndex) {
+    // Form label and input
+    let form = document.createElement("form");
+    form.id = "change-priority-form";
+    let changePriorityLabel = document.createElement("p");
+    changePriorityLabel.classList.add("priority-change-label");
+    changePriorityLabel.innerText = "Change Priority";
+    let changePriorityCompleted = document.createElement("input");
+    changePriorityCompleted.classList.add("change-todo-priority");
+    changePriorityCompleted.id = "change-todo-priority-completed";
+    changePriorityCompleted.type = "radio";
+    changePriorityCompleted.name = "changePriority";
+    changePriorityCompleted.value = "Completed";
+    changePriorityCompleted.checked = true;
+    let changePriorityCompletedText = document.createElement("span");
+    changePriorityCompletedText.classList.add("change-todo-priority-text");
+    changePriorityCompletedText.innerText = "Completed";
+    let changePriorityHigh = document.createElement("input");
+    changePriorityHigh.classList.add("change-todo-priority");
+    changePriorityHigh.id = "change-todo-priority-high";
+    changePriorityHigh.type = "radio";
+    changePriorityHigh.name = "changePriority";
+    changePriorityHigh.value = "High";
+    let changePriorityHighText = document.createElement("span");
+    changePriorityHighText.classList.add("change-todo-priority-text");
+    changePriorityHighText.innerText = "High";
+    let changePriorityMedium = document.createElement("input");
+    changePriorityMedium.classList.add("change-todo-priority");
+    changePriorityMedium.id = "change-todo-priority-medium";
+    changePriorityMedium.type = "radio";
+    changePriorityMedium.name = "changePriority";
+    changePriorityMedium.value = "Medium";
+    let changePriorityMediumText = document.createElement("span");
+    changePriorityMediumText.classList.add("change-todo-priority-text");
+    changePriorityMediumText.innerText = "Medium";
+    let changePriorityLow = document.createElement("input");
+    changePriorityLow.classList.add("change-todo-priority");
+    changePriorityLow.id = "change-todo-priority-low";
+    changePriorityLow.type = "radio";
+    changePriorityLow.name = "changePriority";
+    changePriorityLow.value = "Low";
+    let changePriorityLowText = document.createElement("span");
+    changePriorityLowText.classList.add("change-todo-priority-text");
+    changePriorityLowText.innerText = "Low";
+    // Form submit
+    let btn = document.createElement("button");
+    btn.innerText = "Update";
+    // Need to specify button type as button because submit is default
+    btn.type = "button";
+    btn.addEventListener("click", function() {
+      // Call changeTodo
+      changePriority(todoIndex);
+    });
+    btn.classList.add("btn");
+    // Appending to form
+    form.appendChild(changePriorityLabel);
+    form.appendChild(changePriorityCompleted);
+    form.appendChild(changePriorityCompletedText);
+    form.appendChild(changePriorityHigh);
+    form.appendChild(changePriorityHighText);
+    form.appendChild(changePriorityMedium);
+    form.appendChild(changePriorityMediumText);
+    form.appendChild(changePriorityLow);
+    form.appendChild(changePriorityLowText);
+    form.appendChild(btn);
+
+    return form;
+  }
+
   function deleteTodo(index) {
-    let project = manager.getActive();
-    project.deleteTodo(index);
+    manager.removeTodo(index);
+    listTodos();
+  }
+
+  function changePriority() {
+    let updatedPriority = document.querySelector('input[name="changePriority"]:checked').value;
+    let allTodos = document.querySelectorAll('.todo');
+    for (let i = 0; i < allTodos.length; i++) {
+      if (allTodos[i].childNodes.length == 2) {
+        manager.changeTodoPriority(updatedPriority, i);
+      }
+    }
     listTodos();
   }
 
@@ -337,7 +443,7 @@ const displayHandler = (() => {
     manager.setActive(0);
     listProjects();
     // Find first project, which is always default, and set active
-    document.querySelector(".project").classList.add("project-active");
+    showActiveProject();
   }
 
   // Check if string is empty
