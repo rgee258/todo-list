@@ -7,7 +7,7 @@ const displayHandler = (() => {
     let btn = document.createElement("button");
     btn.innerText = "New";
     btn.classList.add("btn");
-    btn.classList.add("project-btn");
+    btn.classList.add("new-project-btn");
     btn.addEventListener("click", function() {
       // Add or remove new project form if it exists
       if (document.querySelector("#new-project-form")) {
@@ -39,6 +39,8 @@ const displayHandler = (() => {
       newProject();
     });
     btn.classList.add("btn");
+    btn.classList.add("create-btn");
+    btn.classList.add("project-create-btn");
     // Appending to form
     form.appendChild(projectLabel);
     form.appendChild(projectName);
@@ -49,6 +51,7 @@ const displayHandler = (() => {
 
   function newProject() {
     let projectName = document.querySelector("#new-project-name").value;
+    // Check for empty name
     if (isEmpty(projectName)) {
       window.alert("Project name is empty!");
     }
@@ -71,18 +74,41 @@ const displayHandler = (() => {
       let projectTitle = document.createElement("span");
       projectTitle.innerText = project.name;
       projectTitle.addEventListener("click", function() {
-        manager.setActive(index);
+        manager.setActive(project.id);
         removeActiveProject();
         projectNode.classList.add("project-active");
         listTodos();
       });
       projectNode.appendChild(projectTitle);
+      if (index !== 0) {
+        projectNode.appendChild(createDeleteProjectBtn(project.id));
+      }
       projectListNode.appendChild(projectNode);
     });
     // Show the active project
     showActiveProject();
     // Show the todos for the currently active project
     listTodos();
+  }
+
+  function createDeleteProjectBtn(id) {
+    // Similar to newProjectBtn()
+    let btn = document.createElement("button");
+    btn.innerText = "Delete";
+    btn.addEventListener("click", function() {
+      deleteProject(id);
+    });
+    btn.classList.add("btn");
+    btn.classList.add("delete-btn");
+    btn.classList.add("project-delete-btn");
+
+    // Return button for appending
+    return btn;
+  }
+
+  function deleteProject(id) {
+    manager.removeProject(id);
+    listProjects();
   }
 
   function clearProjects() {
@@ -111,7 +137,7 @@ const displayHandler = (() => {
     let btn = document.createElement("button");
     btn.innerText = "New";
     btn.classList.add("btn");
-    btn.classList.add("todo-btn");
+    btn.classList.add("new-todo-btn");
     btn.addEventListener("click", function() {
       // Add or remove new project form if it exists
       if (document.querySelector("#new-todo-form")) {
@@ -145,7 +171,7 @@ const displayHandler = (() => {
     todoDateLabel.innerText = "Due Date";
     let todoDate = document.createElement("input");
     todoDate.id = "new-todo-date";
-    todoDate.type = "text";
+    todoDate.type = "date";
     let todoPriorityLabel = document.createElement("p");
     todoPriorityLabel.classList.add("todo-form-label");
     todoPriorityLabel.innerText = "Priority";
@@ -192,6 +218,8 @@ const displayHandler = (() => {
       newTodo();
     });
     btn.classList.add("btn");
+    btn.classList.add("create-btn");
+    btn.classList.add("todo-create-btn");
     // Appending to form
     form.appendChild(todoTitleLabel);
     form.appendChild(todoTitle);
@@ -227,13 +255,20 @@ const displayHandler = (() => {
     // Index 4 is notes
     todoInputs.push(document.querySelector("#new-todo-notes").value);
 
-    for (let i = 0; i < 3; i++) {
+    // If title or description is blank then alert error
+    for (let i = 0; i < 2; i++) {
       if (isEmpty(todoInputs[i])) {
         window.alert("Missing at least one todo field!");
         filled = false;
         break;
       }
     };
+
+    // Check for proper date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(todoInputs[2])) {
+      window.alert("Invalid date field!");
+      filled = false;
+    }
 
     // Add default value to notes if none are present
     if (isEmpty(todoInputs[4])) {
@@ -279,7 +314,7 @@ const displayHandler = (() => {
       }
       let todoDate = document.createElement("span");
       todoDate.classList.add("todo-date");
-      todoDate.innerText = todo.dueDate;
+      todoDate.innerText = todo.formattedDueDate();
       todoTop.appendChild(todoTitle);
       todoTop.appendChild(todoDate);
       todoTop.appendChild(createDeleteTodoBtn(index));
@@ -318,7 +353,7 @@ const displayHandler = (() => {
     dueDateLabel.classList.add("detail-label");
     dueDateLabel.innerText = "Due Date:";
     let dueDate = document.createElement("p");
-    dueDate.innerText = todo.dueDate;
+    dueDate.innerText = todo.formattedDueDate();
     let notesLabel = document.createElement("p");
     notesLabel.classList.add("detail-label");
     notesLabel.innerText = "Notes:";
@@ -330,8 +365,7 @@ const displayHandler = (() => {
     details.appendChild(dueDate);
     details.appendChild(notesLabel);
     details.appendChild(notes);
-
-    // Placeholder for changing priority pseudo-form
+    // Change priority form
     details.appendChild(createPriorityChangeForm());
 
     // Appending
@@ -339,7 +373,6 @@ const displayHandler = (() => {
   }
 
   function createDeleteTodoBtn(index) {
-    // Similar to newProjectBtn()
     let btn = document.createElement("button");
     btn.innerText = "Delete";
     btn.addEventListener("click", function() {
@@ -347,6 +380,7 @@ const displayHandler = (() => {
     });
     btn.classList.add("btn");
     btn.classList.add("delete-btn");
+    btn.classList.add("todo-delete-btn");
 
     // Return button for appending
     return btn;
@@ -402,10 +436,10 @@ const displayHandler = (() => {
     // Need to specify button type as button because submit is default
     btn.type = "button";
     btn.addEventListener("click", function() {
-      // Call changeTodo
       changePriority(todoIndex);
     });
     btn.classList.add("btn");
+    btn.classList.add("update-btn");
     // Appending to form
     form.appendChild(changePriorityLabel);
     form.appendChild(changePriorityCompleted);
@@ -427,8 +461,10 @@ const displayHandler = (() => {
   }
 
   function changePriority() {
+    // Retrieve new priority from the only checked value
     let updatedPriority = document.querySelector('input[name="changePriority"]:checked').value;
     let allTodos = document.querySelectorAll('.todo');
+    // Change the priority of the only todo that has its details open
     for (let i = 0; i < allTodos.length; i++) {
       if (allTodos[i].childNodes.length == 2) {
         manager.changeTodoPriority(updatedPriority, i);
@@ -438,11 +474,14 @@ const displayHandler = (() => {
   }
 
   function setup() {
+    // Append buttons
     newProjectBtn();
     newTodoBtn();
+    // Load from storage if applicable and set the active to Default
+    manager.loadStorage();
     manager.setActive(0);
+    // Display appropriate projects
     listProjects();
-    // Find first project, which is always default, and set active
     showActiveProject();
   }
 
