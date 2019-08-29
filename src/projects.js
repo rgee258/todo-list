@@ -1,4 +1,4 @@
-const ProjectFactory = (name) => {
+const ProjectFactory = (name, id) => {
 
   // They seem instanced, are variables defined already bound
   // to this instance?
@@ -27,9 +27,14 @@ const ProjectFactory = (name) => {
     todoList[index].setPriority(newPriority);
   }
 
+  function setTodoList(newList) {
+    todoList = newList;
+  }
+
   const getTodoList = () => todoList;
 
-  return { name, setName, getTodoList, addTodo, deleteTodo, updateTodoPriority }
+  return { name, id, setName, getTodoList, setTodoList, addTodo, deleteTodo, 
+    updateTodoPriority }
 }
 
 export {

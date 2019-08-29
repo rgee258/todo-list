@@ -58,6 +58,8 @@ html {
 body {
   width: 100%;
   height: 100%;
+  font-family: 'Heebo', sans-serif;
+  word-wrap: break-word;
 }
 
 h1 {
@@ -68,6 +70,12 @@ h1 {
 
 h3 {
   text-align: center;
+}
+
+/* Main Header */
+
+.main-header {
+  font-family: 'Carter One', cursive;
 }
 
 /* Content */
@@ -104,15 +112,15 @@ h3 {
 }
 
 .delete-btn {
-  width: 5%;
-  padding: 0.5% 0;
   background-color: red;
 }
 
 /* Project Col */
 
 .projects {
+  box-sizing: border-box;
   flex-basis: 20%;
+  width: 20%;
 }
 
 /* Project Header */
@@ -122,9 +130,18 @@ h3 {
   flex-direction: column;
 }
 
-/* Project List */
+/* Projects */
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.project {
+}
 
 .project span {
+  font-family: 'Sniglet', cursive;
   color: blue;
 }
 
@@ -171,4 +188,20 @@ h3 {
 .prio-complete {
   color: green;
   text-decoration: line-through;
+}
+
+/* Todos - Top */
+
+.todo-top span {
+  font-family: 'Sniglet', cursive;
+}
+
+/* Todos - Details */
+
+.details {
+  font-family: 'Manjari', sans-serif;
+}
+
+#change-priority-form {
+  font-family: 'Heebo', sans-serif;
 }
