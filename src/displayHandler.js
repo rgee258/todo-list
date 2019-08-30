@@ -175,6 +175,7 @@ const displayHandler = (() => {
     let todoPriorityLabel = document.createElement("p");
     todoPriorityLabel.classList.add("todo-form-label");
     todoPriorityLabel.innerText = "Priority";
+    let todoPriorityContainer = document.createElement("div");
     let todoPriorityHigh = document.createElement("input");
     todoPriorityHigh.classList.add("new-todo-priority");
     todoPriorityHigh.id = "new-todo-priority-high";
@@ -203,6 +204,14 @@ const displayHandler = (() => {
     let todoPriorityLowText = document.createElement("span");
     todoPriorityLowText.classList.add("new-todo-priority-text");
     todoPriorityLowText.innerText = "Low";
+    // Append options to priority container
+    todoPriorityContainer.appendChild(todoPriorityHigh);
+    todoPriorityContainer.appendChild(todoPriorityHighText);
+    todoPriorityContainer.appendChild(todoPriorityMedium);
+    todoPriorityContainer.appendChild(todoPriorityMediumText);
+    todoPriorityContainer.appendChild(todoPriorityLow);
+    todoPriorityContainer.appendChild(todoPriorityLowText);
+    todoPriorityContainer.classList.add("new-todo-priority-container");
     let todoNotesLabel = document.createElement("p");
     todoNotesLabel.classList.add("todo-form-label");
     todoNotesLabel.innerText = "Notes (Optional)";
@@ -228,12 +237,7 @@ const displayHandler = (() => {
     form.appendChild(todoDateLabel);
     form.appendChild(todoDate);
     form.appendChild(todoPriorityLabel);
-    form.appendChild(todoPriorityHigh);
-    form.appendChild(todoPriorityHighText);
-    form.appendChild(todoPriorityMedium);
-    form.appendChild(todoPriorityMediumText);
-    form.appendChild(todoPriorityLow);
-    form.appendChild(todoPriorityLowText);
+    form.appendChild(todoPriorityContainer);
     form.appendChild(todoNotesLabel);
     form.appendChild(todoNotes);
     form.appendChild(btn);
@@ -320,7 +324,16 @@ const displayHandler = (() => {
       todoTop.appendChild(createDeleteTodoBtn(index));
       // Add event listener to display the todo details
       todoTop.addEventListener("click", function() {
-        todoDetails(todoNode, todo, index);
+        // Close open details if opened already
+        if (todoNode.children.length == 2) {
+          let openDetails = document.querySelectorAll(".details");
+          openDetails.forEach(function(opened) {
+            opened.remove();
+          });
+        }
+        else {
+          todoDetails(todoNode, todo, index);
+        }
       });
       todoNode.appendChild(todoTop);
       todoListNode.appendChild(todoNode);
@@ -354,6 +367,11 @@ const displayHandler = (() => {
     dueDateLabel.innerText = "Due Date:";
     let dueDate = document.createElement("p");
     dueDate.innerText = todo.formattedDueDate();
+    let descriptionLabel = document.createElement("p");
+    descriptionLabel.classList.add("detail-label");
+    descriptionLabel.innerText = "Description:";
+    let description = document.createElement("p");
+    description.innerText = todo.description;
     let notesLabel = document.createElement("p");
     notesLabel.classList.add("detail-label");
     notesLabel.innerText = "Notes:";
@@ -363,6 +381,8 @@ const displayHandler = (() => {
     details.appendChild(priority);
     details.appendChild(dueDateLabel);
     details.appendChild(dueDate);
+    details.appendChild(descriptionLabel);
+    details.appendChild(description);
     details.appendChild(notesLabel);
     details.appendChild(notes);
     // Change priority form
@@ -390,6 +410,7 @@ const displayHandler = (() => {
     // Form label and input
     let form = document.createElement("form");
     form.id = "change-priority-form";
+    let changePriorityContainer = document.createElement("div");
     let changePriorityLabel = document.createElement("p");
     changePriorityLabel.classList.add("priority-change-label");
     changePriorityLabel.innerText = "Change Priority";
@@ -430,26 +451,29 @@ const displayHandler = (() => {
     let changePriorityLowText = document.createElement("span");
     changePriorityLowText.classList.add("change-todo-priority-text");
     changePriorityLowText.innerText = "Low";
+    // Append options to priority container
+    changePriorityContainer.appendChild(changePriorityCompleted);
+    changePriorityContainer.appendChild(changePriorityCompletedText);
+    changePriorityContainer.appendChild(changePriorityHigh);
+    changePriorityContainer.appendChild(changePriorityHighText);
+    changePriorityContainer.appendChild(changePriorityMedium);
+    changePriorityContainer.appendChild(changePriorityMediumText);
+    changePriorityContainer.appendChild(changePriorityLow);
+    changePriorityContainer.appendChild(changePriorityLowText);
+    changePriorityContainer.classList.add("change-todo-priority-container");
     // Form submit
     let btn = document.createElement("button");
     btn.innerText = "Update";
     // Need to specify button type as button because submit is default
     btn.type = "button";
     btn.addEventListener("click", function() {
-      changePriority(todoIndex);
+      changePriority();
     });
     btn.classList.add("btn");
     btn.classList.add("update-btn");
     // Appending to form
     form.appendChild(changePriorityLabel);
-    form.appendChild(changePriorityCompleted);
-    form.appendChild(changePriorityCompletedText);
-    form.appendChild(changePriorityHigh);
-    form.appendChild(changePriorityHighText);
-    form.appendChild(changePriorityMedium);
-    form.appendChild(changePriorityMediumText);
-    form.appendChild(changePriorityLow);
-    form.appendChild(changePriorityLowText);
+    form.appendChild(changePriorityContainer);
     form.appendChild(btn);
 
     return form;

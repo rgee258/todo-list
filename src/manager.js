@@ -1,6 +1,6 @@
 import { TodoFactory } from './todo.js';
 import { ProjectFactory } from './projects.js';
-import { isDate, compareAsc } from 'date-fns';
+import { compareAsc } from 'date-fns';
 
 const manager = (() => {
 
@@ -80,6 +80,7 @@ const manager = (() => {
 
   function changeTodoPriority(newPriority, index) {
     active.updateTodoPriority(newPriority, index);
+    saveStorage();
   }
 
   function sortTodos() {
