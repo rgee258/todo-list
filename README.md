@@ -4,6 +4,11 @@ In this repository you'll find a todo list web app, where you can create your ow
 
 Creation of this app was done to further practice using dynamically created DOM elements of JS, JS modules, npm with external modules, and webpack, and localStorage.
 
+Check it out [here](https://rgee258.github.io/todo-list/).
+
+This project is done following The Odin Project, which can
+be found [here](https://www.theodinproject.com/courses/javascript/lessons/todo-list).
+
 ## Important
 
 Before using this app, it is important to note that projects and todos are saved into **localStorage**. If localStorage is unavailable, then the app will still function, but will not save so be mindful of refreshing the page or closing your browser. Alternatively, localStorage may be blocked if settings such as blocking of third-party cookies in Chrome are enabled, so make sure to disable such settings to fully take advantage of the saving feature.
@@ -56,8 +61,3 @@ Before using this app, it is important to note that projects and todos are saved
   * style-loader
 * External libraries obtained for use through npm were:
   * [date-fns](https://date-fns.org/) for Date objects and Date sorting
-
-Check it out [here](https://rgee258.github.io/todo-list/).
-
-This project is done following The Odin Project, which can
-be found [here](https://www.theodinproject.com/courses/javascript/lessons/todo-list).
