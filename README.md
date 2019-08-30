@@ -26,7 +26,7 @@ Before using this app, it is important to note that projects and todos are saved
 12. Do the same thing once again, but this time for the project.
 13. You've worked through the app, so give yourself a pat on the back!
 
-*** Projects
+### Projects
 
 * There will always be at least one Default project.
 * New projects are created using the New button in the Projects column.
@@ -34,7 +34,7 @@ Before using this app, it is important to note that projects and todos are saved
 * Only one project will be active at a time, selecting it as active will display its corresponding Todos.
 * If you delete the active project, the active project will be reset to Default.
 
-*** Todos
+### Todos
 
 * Todos will only be displayed from and added to the active project.
 * Attempting to add a todo with missing required inputs will create an alert stating there is a missing entry.
